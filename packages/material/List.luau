@@ -11,7 +11,7 @@ export type Props = {[number]: (...any) -> ()} & {
     AutomaticSize: p<Enum.AutomaticSize>;
     HorizontalAlignment: p<Enum.HorizontalAlignment>;
     VerticalAlignment: p<Enum.VerticalAlignment>;
-    Paddinmg: p<UDim>;
+    Padding: p<UDim>;
 
     Size: p<UDim2>;
     Position: p<UDim2>;

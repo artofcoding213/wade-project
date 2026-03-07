@@ -11,6 +11,7 @@ type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
 export type Props = {[number]: (...any) -> ()} & {
     LayoutOrder: p<number>,
     Text: p<string>,
+    SizeApproximation: boolean?,
 } & {[string]: any};
 
 return function(props: Props)
@@ -39,6 +40,32 @@ return function(props: Props)
                 PaddingTop = UDim.new(0, 5),
             },
         });    
+    end
+
+    if labelProps.SizeApproximation then
+        labelProps.SizeApproximation = nil;
+
+        local ts = game:GetService("TextService");
+        local conns = {};
+        local labelCharm = c();
+        labelCharm:subscribe(function(x)
+            local function f()
+                local sz = ts:GetTextSize(x.Text, x.TextSize, Enum.Font.SourceSans, Vector2.new(x.AbsoluteSize.X, x.AbsoluteSize.Y));
+                x.Size = UDim2.new(x.Size.X, UDim.new(0, sz.Y));
+            end
+
+            for _, conn in ipairs(conns) do
+                x:GetPropertyChangedSignal(conn):Connect(f);
+            end
+
+            f();
+        end);
+
+        labelProps.Charm = labelCharm;
+
+        table.insert(conns, "TextSize");
+        table.insert(conns, "FontFace");
+        table.insert(conns, "Text");
     end
 
     return e "TextLabel"(labelProps);

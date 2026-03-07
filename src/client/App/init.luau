@@ -8,7 +8,11 @@ return function()
         if modScript:IsA("ModuleScript") then
             local mod = require(modScript);
             if typeof(mod) == "table" then
-                table.insert(children, mod);
+                if mod.render then
+                    table.insert(children, mod:render());
+                else
+                    table.insert(children, mod);
+                end
             elseif typeof(mod) == "function" then
                 table.insert(children, mod());
             end

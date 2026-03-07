@@ -12,9 +12,12 @@ local Label = Material.Label;
 local HoverCard = Material.HoverCard;
 local Input = Material.Input;
 
+local Sonner = require(script.Parent.Sonner);
+
 return function()
     local open = c(false);
     local objectCount = c(0);
+    local inputValue = c();
 
     task.spawn(function()
         local pgui = game.Players.LocalPlayer:WaitForChild("PlayerGui");
@@ -112,10 +115,48 @@ return function()
                             },
                         },
                     },
-                    Input {
+                    List {
                         LayoutOrder = 2,
-                        BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
-                        PlaceholderText = "hello, input!",
+                        FillDirection = Enum.FillDirection.Horizontal,
+                        Children = {
+                            Input {
+                                LayoutOrder = 0,
+                                BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
+                                PlaceholderText = "hello, input!",
+                                Text = inputValue,
+                            },
+                            Button {
+                                Style = "Secondary",
+                                Size = UDim2.fromScale(0, 0),
+                                Padding = UDim.new(0, 10),
+
+                                LayoutOrder = 1,
+                                Text = "Toast",
+                                AutomaticSize = Enum.AutomaticSize.XY,
+
+                                [wade.Event.Activated] = function()
+                                    Sonner:toast(inputValue:get(), {description = inputValue:get()});
+                                end,
+                            },
+                        },
+                    },
+                    ScrollArea {
+                        LayoutOrder = 3,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        VerticalAlignment = Enum.VerticalAlignment.Top,
+                        Size = UDim2.new(1, -10, 0, 100),
+                        ElementPadding = UDim.new(0, 0),
+
+                        Children = {
+                            Label { Text = "Hello," },
+                            Label { Text = "world!" },
+                            Label { Text = "I am a" },
+                            Label { Text = "ScrollArea" },
+                            Label { Text = "!" },
+                            Label { Text = "foo" },
+                            Label { Text = "bar" },
+                            Label { Text = "baz" },
+                        },
                     },
                 },
             },

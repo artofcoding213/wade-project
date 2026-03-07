@@ -82,6 +82,7 @@ export type T = typeof(lib) & {
     ScrollArea: typeof(require(script.ScrollArea)),
     Select: typeof(require(script.Select)),
     Slider: typeof(require(script.Slider)),
+    Sonner: typeof(require(script.Sonner)),
 };
 
 local out = setmetatable({}, {

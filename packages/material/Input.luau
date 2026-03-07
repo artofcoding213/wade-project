@@ -37,11 +37,17 @@ return function(props: Props)
         focused = c(props.Focused or false);
     end
 
-    local text: wade.Charm<string>;
+    local charm = props.Charm or c();
+    local text: string;
     if props.Text and Charms.isCharm(props.Text) then
-        text = props.Text;
+        text = props.Text:get() or "";
+        charm:subscribe(function(x)
+            x:GetPropertyChangedSignal("Text"):Connect(function()
+                props.Text:set(x.Text);
+            end);
+        end);
     else
-        text = c(props.Text or "");
+        text = props.Text or "";
     end
 
     local ti = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out);
@@ -76,10 +82,10 @@ return function(props: Props)
         AnchorPoint = props.AnchorPoint,
         AutomaticSize = props.AutomaticSize or Enum.AutomaticSize.XY,
 
-        Text = text:get() or "",
+        Text = text,
         ClearTextOnFocus = false,
 
-        Charm = props.Charm,
+        Charm = charm,
         InheritedProps = props,
         Children = {
             e "UICorner" {

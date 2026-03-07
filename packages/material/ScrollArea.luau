@@ -1,5 +1,6 @@
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local e = wade.element;
+local a = wade.animCharm;
 
 local Material = _G["_Material"]::any;
 
@@ -27,6 +28,11 @@ export type Props = {[number]: (...any) -> ()} & {
 };
 
 return function(props: Props)
+    local ti = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out);
+
+    local useAnim = not     game.UserInputService.TouchEnabled;
+    local scrollbarTransparency = useAnim and a(1, 0.6, ti) or 0.6;
+
     return e "ScrollingFrame" {
         AutomaticCanvasSize = Enum.AutomaticSize.XY,
         CanvasSize = UDim2.fromScale(0, 0),
@@ -39,8 +45,9 @@ return function(props: Props)
 
         ScrollBarThickness = props.ScrollbarThickness or 10,
         ScrollBarImageColor3 = Color3.new(1, 1, 1),
-        ScrollBarImageTransparency = 0.6,
+        ScrollBarImageTransparency = scrollbarTransparency,
 
+        InheritedProps = props,
         Children = {
             e "UIStroke" {
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -67,5 +74,16 @@ return function(props: Props)
             },
             props.Children,
         },
+
+        [wade.Event.Hover] = function()
+            if useAnim then
+                scrollbarTransparency:play();
+            end
+        end,
+        [wade.Event.Unhover] = function()
+            if useAnim then
+                scrollbarTransparency:playReverse();
+            end
+        end,
     };
 end

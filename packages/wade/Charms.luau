@@ -36,7 +36,10 @@ export type AnimCharm<T> = {
     stop: (self: AnimCharm<T>) -> (),
     setAB: (self: AnimCharm<T>, a: T?, b: T?) -> (),
 
+    wait: (self: AnimCharm<T>) -> (),
+
     attach: (self: AnimCharm<T>, to: Instance, prop: string) -> (),
+    onAttach: (self: AnimCharm<T>, f: (to: Instance, prop: string) -> ()) -> RBXScriptConnection,
     destroy: (self: AnimCharm<T>) -> (),
     
     getCharm: (self: AnimCharm<T>) -> Charm<T>,
@@ -117,11 +120,18 @@ end
 function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, initStartAtB: boolean?)
     local tracks = {};
     local attached: {{Instance | string}} = {};
+    local conns = {};
 
     return {
         __is_charm = "animCharm",
         a = _a,
         b = _b,
+
+        wait = function(self)
+            for _, t in ipairs(tracks) do
+                t.Completed:Wait();
+            end
+        end,
 
         play = function(self)
             self:stop();
@@ -177,6 +187,28 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
             end
             
             table.insert(attached, {to, prop});
+
+            for _, f in ipairs(conns) do
+                f(to, prop);
+            end
+        end,
+
+        onAttach = function(self, f)
+            table.insert(conns, f);
+
+            return {
+                Disconnect = function(self)
+                    local i = table.find(conns, f);
+                    if not i then
+                        return;
+                    end 
+
+                    table.remove(conns, i);
+                end,
+                disconnect = function(self)
+                    self:Disconnect();
+                end,
+            }::RBXScriptConnection;
         end,
 
         destroy = function(self)
