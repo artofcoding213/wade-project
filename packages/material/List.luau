@@ -3,10 +3,10 @@
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local e = wade.element;
 
-local Material = require(game.ReplicatedStorage.Packages.material);
+local Material = _G["_Material"]::any;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     FillDirection: p<Enum.FillDirection>;
     AutomaticSize: p<Enum.AutomaticSize>;
     HorizontalAlignment: p<Enum.HorizontalAlignment>;
@@ -16,7 +16,7 @@ export type Props = Material.Props<{
     Size: p<UDim2>;
     Position: p<UDim2>;
     Children: wade.ChildrenType;
-}>;
+};
 
 return function(props: Props)
     return e "Frame" {

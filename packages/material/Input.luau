@@ -4,10 +4,10 @@ local e = wade.element;
 local c = wade.charm;
 local a = wade.animCharm;
 
-local Material = require(game.ReplicatedStorage.Packages.material);
+local Material = _G["_Material"]::any;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{[string]: any} & {
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {[string]: any} & {
     Text: p<string>;
     PlaceholderText: p<string>;
     Focused: p<boolean>;
@@ -27,7 +27,7 @@ export type Props = Material.Props<{[string]: any} & {
     TextSize: p<number>;
 
     Charm: wade.Charm<TextBox>;
-}>;
+};
 
 return function(props: Props)
     local focused: wade.Charm<boolean>;

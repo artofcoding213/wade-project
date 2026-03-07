@@ -5,17 +5,17 @@ local c = wade.charm;
 local h = wade.charmHook;
 local a = wade.animCharm;
 
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     Position: p<UDim2>;
 
     Selected: p<string>;
     Items: p<{string}>;
 
     Padding: p<UDim>;
-}>;
+};
 
 return function(props: Props)
     local selected: wade.Charm<string>;

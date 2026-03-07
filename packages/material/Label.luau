@@ -4,14 +4,14 @@ local e = wade.element;
 local c = wade.charm;
 local a = wade.animCharm;
 
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 local Button = require(script.Parent.Button);
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     LayoutOrder: p<number>,
     Text: p<string>,
-}> & {[string]: any};
+} & {[string]: any};
 
 return function(props: Props)
     local labelProps = props;

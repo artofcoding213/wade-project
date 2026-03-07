@@ -3,6 +3,7 @@ local c = wade.charm;
 local e = wade.element;
 
 local Material = require(game.ReplicatedStorage.Packages.material);
+local ScrollArea = Material.ScrollArea;
 local Dialog = Material.Dialog;
 local Button = Material.Button;
 local Checkbox = Material.Checkbox;
@@ -45,7 +46,7 @@ return function()
 
     game.RunService.PreRender:Connect(function(dt)
         loudness:set(
-            math.clamp(math.lerp(loudness:get(), music.PlaybackLoudness/1000, dt*10)*sliderValue:get()*1.5, 0, 1)
+            math.clamp(math.lerp(loudness:get(), music.PlaybackLoudness/1000, dt*10)*sliderValue:get(), 0, 1)
         );
 
         if timePositionLocked:get() then
@@ -82,106 +83,111 @@ return function()
             ActionText = actionText,
             CancelText = "Cancel",
 
-            Body = {
-                e "UIListLayout" {
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                    FillDirection = Enum.FillDirection.Vertical,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    VerticalAlignment = Enum.VerticalAlignment.Top,
-                    Padding = UDim.new(0, 5),
-                },
-                RadioGroup {
-                    Selected = actionText,
-                    Items = {
-                        "Hello,",
-                        "RadioGroup!",
-                        "-wade/material",
+            Body = ScrollArea {
+                HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                VerticalAlignment = Enum.VerticalAlignment.Top,
+                StrokeTransparency = 1,
+                Children = {
+                    e "UIListLayout" {
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                        FillDirection = Enum.FillDirection.Vertical,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        VerticalAlignment = Enum.VerticalAlignment.Top,
+                        Padding = UDim.new(0, 5),
                     },
-                },
-                Checkbox {
-                    On = checkboxOn,
-                    Label = "Looped",
-                },
-                List {
-                    Size = UDim2.new(1, 0, 0, 0),
-                    AutomaticSize = Enum.AutomaticSize.Y,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    Padding = UDim.new(0, 10),
-
-                    Children = {
-                        Label {
-                            LayoutOrder = 2,
-                            BackgroundTransparency = 0,
-                            Text = wade.charmHook(sliderValue, function(x)
-                                return `Volume: {math.floor(x*100)}%`;
-                            end),
-                        },
-                        Slider {
-                            LayoutOrder = 1,
-                            Value = sliderValue,
-                            Size = UDim2.new(0.5, 0, 0, 10),
+                    RadioGroup {
+                        Selected = actionText,
+                        Items = {
+                            "Hello,",
+                            "RadioGroup!",
+                            "-wade/material",
                         },
                     },
-                },
-                List {
-                    Size = UDim2.new(1, 0, 0, 0),
-                    AutomaticSize = Enum.AutomaticSize.Y,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    Padding = UDim.new(0, 10),
+                    Checkbox {
+                        On = checkboxOn,
+                        Label = "Looped",
+                    },
+                    List {
+                        Size = UDim2.new(1, 0, 0, 0),
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        Padding = UDim.new(0, 10),
 
-                    Children = {
-                        Label {
-                            LayoutOrder = 2,
-                            BackgroundTransparency = 0,
-                            Text = wade.charmHook(timePosition, function(x)
-                                return `Time Position: {math.floor(x*100)}%`;
-                            end),
-                        },
-                        Slider {
-                            LayoutOrder = 1,
-                            Value = timePosition,
-                            Size = UDim2.new(0.5, 0, 0, 10),
-
-                            onSlideBegin = function()
-                                timePositionLocked:set(true);
-                            end,
-                            onSlideEnd = function()
-                                timePositionLocked:set(false);
-                            end,
+                        Children = {
+                            Label {
+                                LayoutOrder = 2,
+                                BackgroundTransparency = 0,
+                                Text = wade.charmHook(sliderValue, function(x)
+                                    return `Volume: {math.floor(x*100)}%`;
+                                end),
+                            },
+                            Slider {
+                                LayoutOrder = 1,
+                                Value = sliderValue,
+                                Size = UDim2.new(0.5, 0, 0, 10),
+                            },
                         },
                     },
-                },
-                List {
-                    Size = UDim2.new(1, 0, 0, 0),
-                    AutomaticSize = Enum.AutomaticSize.Y,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    Padding = UDim.new(0, 10),
+                    List {
+                        Size = UDim2.new(1, 0, 0, 0),
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        Padding = UDim.new(0, 10),
 
-                    Children = {
-                        Label {
-                            LayoutOrder = 2,
-                            BackgroundTransparency = 0,
-                            Text = wade.charmHook(loudness, function(x)
-                                return `Loudness: {math.floor(x*100)}%`;
-                            end),
-                        },
-                        Slider {
-                            LayoutOrder = 1,
-                            Value = loudness,
-                            Size = UDim2.new(0.5, 0, 0, 10),
+                        Children = {
+                            Label {
+                                LayoutOrder = 2,
+                                BackgroundTransparency = 0,
+                                Text = wade.charmHook(timePosition, function(x)
+                                    return `Time Position: {math.floor(x*100)}%`;
+                                end),
+                            },
+                            Slider {
+                                LayoutOrder = 1,
+                                Value = timePosition,
+                                Size = UDim2.new(0.5, 0, 0, 10),
+
+                                onSlideBegin = function()
+                                    timePositionLocked:set(true);
+                                end,
+                                onSlideEnd = function()
+                                    timePositionLocked:set(false);
+                                end,
+                            },
                         },
                     },
-                },
-                Select {
-                    TriggerProps = {
-                        Position = UDim2.fromScale(0, 0),
-                    },
+                    List {
+                        Size = UDim2.new(1, 0, 0, 0),
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        Padding = UDim.new(0, 10),
 
-                    Items = {"big", "medium", "small"},
-                    Selected = sz,
-                    TextHook = function(x)
-                        return `Size: <mark color="rgb(10, 10, 10)" transparency="0.5">{x}</mark>`;
-                    end,
+                        Children = {
+                            Label {
+                                LayoutOrder = 2,
+                                BackgroundTransparency = 0,
+                                Text = wade.charmHook(loudness, function(x)
+                                    return `Loudness: {math.floor(x*100)}%`;
+                                end),
+                            },
+                            Slider {
+                                LayoutOrder = 1,
+                                Value = loudness,
+                                Size = UDim2.new(0.5, 0, 0, 10),
+                            },
+                        },
+                    },
+                    Select {
+                        TriggerProps = {
+                            Position = UDim2.fromScale(0, 0),
+                        },
+
+                        Items = {"big", "medium", "small"},
+                        Selected = sz,
+                        TextHook = function(x)
+                            return `Size: <mark color="rgb(10, 10, 10)" transparency="0.5">{x}</mark>`;
+                        end,
+                    },
                 },
             },
         },

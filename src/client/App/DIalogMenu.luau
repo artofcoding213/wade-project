@@ -3,6 +3,7 @@ local c = wade.charm;
 local e = wade.element;
 
 local Material = require(game.ReplicatedStorage.Packages.material);
+local ScrollArea = Material.ScrollArea;
 local Button = Material.Button;
 local Dialog = Material.Dialog;
 local Avatar = Material.Avatar;
@@ -46,71 +47,76 @@ return function()
             CancelText = "",
             CloseButton = true,
 
-            Body = {
-                e "UIListLayout" {
-                    FillDirection = Enum.FillDirection.Vertical,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    VerticalAlignment = Enum.VerticalAlignment.Top,
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                    Padding = UDim.new(0, 5),
-                },
-                Label {
-                    LayoutOrder = 0,
-                    Text = wade.charmHook(objectCount, function(x)
-                        return `gui object count: {x}`;
-                    end),
-                    BackgroundTransparency = 0,
-                },
-                List {
-                    LayoutOrder = 1,
-                    FillDirection = Enum.FillDirection.Horizontal,
-                    Children = {
-                        HoverCard {
-                            Trigger = Avatar {
-                                UserId = game.Players.LocalPlayer.UserId,
-                                Badge = Color3.new(0, 0.8, 0),
-                            },
-                            Content = {
-                                e "UIListLayout" {},
-                                Label {
-                                    Text = "This avatar uses a solid color badge",
+            Body = ScrollArea {
+                HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                VerticalAlignment = Enum.VerticalAlignment.Top,
+                StrokeTransparency = 1,
+                Children = {
+                    e "UIListLayout" {
+                        FillDirection = Enum.FillDirection.Vertical,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        VerticalAlignment = Enum.VerticalAlignment.Top,
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                        Padding = UDim.new(0, 5),
+                    },
+                    Label {
+                        LayoutOrder = 0,
+                        Text = wade.charmHook(objectCount, function(x)
+                            return `gui object count: {x}`;
+                        end),
+                        BackgroundTransparency = 0,
+                    },
+                    List {
+                        LayoutOrder = 1,
+                        FillDirection = Enum.FillDirection.Horizontal,
+                        Children = {
+                            HoverCard {
+                                Trigger = Avatar {
+                                    UserId = game.Players.LocalPlayer.UserId,
+                                    Badge = Color3.new(0, 0.8, 0),
+                                },
+                                Content = {
+                                    e "UIListLayout" {},
+                                    Label {
+                                        Text = "This avatar uses a solid color badge",
+                                    },
                                 },
                             },
-                        },
-                        HoverCard {
-                            Trigger = Avatar {
-                                UserId = game.Players.LocalPlayer.UserId,
-                                Badge = Color3.new(0.3, 0.3, 0.3),
-                            },
-                            Content = {
-                                e "UIListLayout" {},
-                                Label {
-                                    Text = "This avatar uses a solid color badge",
+                            HoverCard {
+                                Trigger = Avatar {
+                                    UserId = game.Players.LocalPlayer.UserId,
+                                    Badge = Color3.new(0.3, 0.3, 0.3),
+                                },
+                                Content = {
+                                    e "UIListLayout" {},
+                                    Label {
+                                        Text = "This avatar uses a solid color badge",
+                                    },
                                 },
                             },
-                        },
-                        HoverCard {
-                            Trigger = Avatar {
-                                UserId = game.Players.LocalPlayer.UserId,
-                                Badge = "rbxassetid://7577357898",
-                                BadgeSize = UDim2.fromOffset(20, 20),
-                            },
-                            Content = {
-                                e "UIListLayout" {},
-                                Label {
-                                    Text = "This avatar uses an image badge (scaled up so you can see it)",
+                            HoverCard {
+                                Trigger = Avatar {
+                                    UserId = game.Players.LocalPlayer.UserId,
+                                    Badge = "rbxassetid://7577357898",
+                                    BadgeSize = UDim2.fromOffset(20, 20),
+                                },
+                                Content = {
+                                    e "UIListLayout" {},
+                                    Label {
+                                        Text = "This avatar uses an image badge (scaled up so you can see it)",
+                                    },
                                 },
                             },
-                        },
-                        Label {
-                            Text = "These avatars have hover cards!",
+                            Label {
+                                Text = "These avatars have hover cards!",
+                            },
                         },
                     },
-                },
-                Input {
-                    LayoutOrder = 2,
-                    BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
-                    PlaceholderText = "hello, input!",
+                    Input {
+                        LayoutOrder = 2,
+                        BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
+                        PlaceholderText = "hello, input!",
+                    },
                 },
             },
         }

@@ -1,12 +1,12 @@
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
 local Charms = require(game.ReplicatedStorage.Packages.wade.Charms);
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local e = wade.element;
 local a = wade.animCharm;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     -- transform
     Position: p<UDim2>;
     Size: p<UDim2>;
@@ -21,7 +21,7 @@ export type Props = Material.Props<{
     -- button style
     Padding: p<UDim>;
     CornerRadius: p<UDim>;
-    Style: p<Material.ButtonStyle>;
+    Style: p<"Primary" | "Secondary" | "Danger" | "Success">;
 
     BackgroundColor: p<Color3>;
     BackgroundTransparency: p<number>;
@@ -46,7 +46,7 @@ export type Props = Material.Props<{
     -- wade stuff
     Children: wade.ChildrenType?;
     Charm: wade.Charm<TextButton>?;
-}>;
+};
 
 local s = UDim2.fromScale;
 local o = UDim2.fromOffset;

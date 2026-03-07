@@ -1,12 +1,12 @@
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
 local Charms = require(game.ReplicatedStorage.Packages.wade.Charms);
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local e = wade.element;
 local c = wade.charm;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     Badge: p<string | Color3>;
     BadgeSize: p<UDim2>;
 
@@ -17,7 +17,7 @@ export type Props = Material.Props<{
     Size: p<UDim2>;
     Position: p<UDim2>;
     LayoutOrder: p<number>;
-}>;
+};
 
 return function(props: Props)
     local img = c();

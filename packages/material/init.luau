@@ -1,6 +1,7 @@
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local Charms = require(game.ReplicatedStorage.Packages.wade.Charms);
 
+-- these are expanded in the files :)
 export type Prop<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
 export type Props<T> = {[number]: (...any) -> ()} & T;
 
@@ -68,12 +69,30 @@ function lib.Extract<T>(p: Prop<T>, def: T): T
     return (p::T?) or def;
 end
 
-return setmetatable({}, {
+export type T = typeof(lib) & {
+    Avatar: typeof(require(script.Avatar)),
+    Button: typeof(require(script.Button)),
+    Checkbox: typeof(require(script.Checkbox)),
+    Dialog: typeof(require(script.Dialog)),
+    HoverCard: typeof(require(script.HoverCard)),
+    Input: typeof(require(script.Input)),
+    Label: typeof(require(script.Label)),
+    List: typeof(require(script.List)),
+    RadioGroup: typeof(require(script.RadioGroup)),
+    ScrollArea: typeof(require(script.ScrollArea)),
+    Select: typeof(require(script.Select)),
+    Slider: typeof(require(script.Slider)),
+};
+
+local out = setmetatable({}, {
     __index = function(_, i)
         if lib[i] then
             return lib[i]
         end
-        
+
         return require(script:FindFirstChild(i));
     end,
-});
+}) :: T;
+_G._Material = out;
+
+return (out::any) :: T;

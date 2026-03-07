@@ -5,10 +5,10 @@ local c = wade.charm;
 local a = wade.animCharm;
 local h = wade.charmHook;
 
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     LayoutOrder: p<number>;
     BackgroundColor: p<Color3>;
     FillColor: p<Color3>;
@@ -21,7 +21,7 @@ export type Props = Material.Props<{
 
     onSlideBegin: (() -> ())?;
     onSlideEnd: (() -> ())?;
-}>;
+};
 
 return function(props: Props)
     local slideThickness = a(1, 5, TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out));

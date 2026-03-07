@@ -4,10 +4,10 @@ local c = wade.charm;
 local h = wade.charmHook;
 local a = wade.animCharm;
 
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     On: wade.Charm<boolean>?;
 
     CheckboxSize: p<UDim2>;
@@ -16,7 +16,7 @@ export type Props = Material.Props<{
     Label: p<string>;
     LabelPosition: ("right" | "left")?;
     LabelProps: {[string]: any}?;
-}>;
+};
 
 return function(props: Props)
     local on = props.On or c(false);

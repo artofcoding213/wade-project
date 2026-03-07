@@ -1,4 +1,4 @@
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 
 local Charms = require(game.ReplicatedStorage.Packages.wade.Charms);
 local wade = require(game.ReplicatedStorage.Packages.wade);
@@ -6,15 +6,15 @@ local e = wade.element;
 local c = wade.charm;
 local a = wade.animCharm;
 
-type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     Trigger: wade.Element;
     Content: wade.ChildrenType;
 
     ContentSize: p<UDim2>;
     ContentAutomaticSize: p<Enum.AutomaticSize>;
     ContentPadding: p<UDim>;
-}>;
+};
 
 return function(props: Props)
     local trigger = c();

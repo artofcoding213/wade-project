@@ -4,11 +4,11 @@ local e = wade.element;
 local c = wade.charm;
 local a = wade.animCharm;
 
-local Material = require(script.Parent);
+local Material = _G["_Material"]::any;
 local Button = require(script.Parent.Button);
 
-export type p<T> = Material.Prop<T>;
-export type Props = Material.Props<{
+export type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
+export type Props = {[number]: (...any) -> ()} & {
     CloseButton: p<boolean>;
 
     Body: wade.ChildrenType;
@@ -22,7 +22,7 @@ export type Props = Material.Props<{
 
     onCancel: (() -> boolean?)?;
     onAction: (() -> boolean?)?;
-}>;
+};
 
 return function(props: Props)
     local ti = TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out);
