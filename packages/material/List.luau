@@ -25,6 +25,7 @@ return function(props: Props)
         AutomaticSize = props.AutomaticSize or Enum.AutomaticSize.XY,
         
         BackgroundTransparency = 1,
+        InheritedProps = props,
         Children = {
             e "UIListLayout" {
                 SortOrder = Enum.SortOrder.LayoutOrder,

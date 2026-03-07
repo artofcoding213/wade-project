@@ -62,6 +62,7 @@ return function(props: Props)
         AutomaticSize = Enum.AutomaticSize.XY,
         BackgroundTransparency = 1,
 
+        InheritedProps = props,
         Children = {
             e "UIListLayout" {
                 Padding = UDim.new(0, 10),

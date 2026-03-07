@@ -90,7 +90,7 @@ export type WadeAPI = {
 
     -- utils
     connectEventTo: (self: WadeAPI, to: Instance, e: Event, f: (...any) -> ()) -> RBXScriptConnection,
-    onVisibilityChanged: (self: WadeAPI, x: GuiObject, f: (isVisible: boolean) -> ()) -> (),
+    onVisibilityChanged: (self: WadeAPI, x: GuiObject, f: (isVisible: boolean) -> ()) -> RBXScriptConnection,
     awaitMountFinish: (self: WadeAPI) -> (),
 
     -- charms
@@ -223,9 +223,10 @@ function wade:connectEventTo(to, e, f)
 end
 
 function wade:onVisibilityChanged(x, f)
-    x:GetPropertyChangedSignal("Visible"):Connect(function()
+    local conns = {};
+    table.insert(conns, x:GetPropertyChangedSignal("Visible"):Connect(function()
         f(x.Visible);
-    end);
+    end));
 
     local function iterate(x: GuiObject?)
         if typeof(x) ~= "Instance" then
@@ -234,14 +235,26 @@ function wade:onVisibilityChanged(x, f)
 
         print(x);
 
-        x:GetPropertyChangedSignal("Visible"):Connect(function()
+        table.insert(conns, x:GetPropertyChangedSignal("Visible"):Connect(function()
             f(x.Visible);
-        end);
+        end));
 
         iterate(x:FindFirstAncestorWhichIsA("GuiObject"));
     end
 
     iterate(x:FindFirstAncestorWhichIsA("GuiObject"));
+
+    return {
+        Disconnect = function(self)
+            for _, conn in ipairs(conns) do
+                conn:Disconnect();
+            end
+            table.clear(conns);
+        end,
+        disconnect = function(self)
+            self:Disconnect();
+        end,
+    }::RBXScriptConnection;
 end
 
 function wade:awaitMountFinish()

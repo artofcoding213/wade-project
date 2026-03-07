@@ -117,6 +117,7 @@ return function(props: Props)
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
         BackgroundTransparency = 1,
 
+        InheritedProps = props,
         Children = {
             e "CanvasGroup" {
                 Name = "Bar",

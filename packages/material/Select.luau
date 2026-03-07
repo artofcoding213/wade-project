@@ -125,6 +125,7 @@ return function(props: Props)
 
         f();
         btn:GetPropertyChangedSignal("AbsolutePosition"):Connect(f);
+        btn:GetPropertyChangedSignal("AbsoluteSize"):Connect(f);
 
         local children = {};
         local items = {};
@@ -247,15 +248,20 @@ return function(props: Props)
         };
     end
 
-    local prevApp;
+    local prevApp, conn;
     btnCharm:subscribe(function(x)
         if prevApp then
             prevApp:Destroy();
         end
 
+        if conn then
+            conn:Disconnect();
+        end
+
         prevApp = wade:mount(DropdownApp, game.Players.LocalPlayer:WaitForChild("PlayerGui"))[1];
         wade:awaitMountFinish();
-        wade:onVisibilityChanged(x, function(isVisible)
+
+        conn = wade:onVisibilityChanged(x, function(isVisible)
             if open:get() and not isVisible then
                 open:set(false);
             end
