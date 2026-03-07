@@ -189,10 +189,6 @@ function wade:mount(App, parent): {Instance}
                 end
             end
         end
-        
-        if e.props.Charm then
-            e.props.Charm:set(i);
-        end
 
         if e.props.Children then
             for _, x in ipairs(parseChildren(e.props.Children)) do
@@ -204,6 +200,10 @@ function wade:mount(App, parent): {Instance}
 
                 getInstance(x).Parent = i;
             end
+        end
+
+        if e.props.Charm then
+            e.props.Charm:set(i);
         end
 
         return i;
