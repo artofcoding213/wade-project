@@ -104,6 +104,9 @@ return function(props: Props)
         Image = img,
         InheritedProps = props,
         Children = {
+            e "UIAspectRatioConstraint" {
+                AspectRatio = 1,
+            },
             e "UIStroke" {
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
                 BorderStrokePosition = Enum.BorderStrokePosition.Outer,

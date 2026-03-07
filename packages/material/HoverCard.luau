@@ -60,7 +60,6 @@ return function(props: Props)
         trigger:GetPropertyChangedSignal("AbsolutePosition"):Connect(f);
         trigger:GetPropertyChangedSignal("AbsoluteSize"):Connect(f);
 
-        print("x");
         return e "CanvasGroup" {
             Position = pos,
             Size = props.ContentSize or UDim2.fromScale(0, 0),
@@ -125,9 +124,7 @@ return function(props: Props)
             conn:Discnnect();
         end
 
-        print("m");
         prevApp = wade:mount(HoverApp, game.Players.LocalPlayer:WaitForChild("PlayerGui"))[1];
-        print("um");
         wade:awaitMountFinish();
         conn = wade:onVisibilityChanged(x, function(isVisible)
             if open:get() and not isVisible then

@@ -179,6 +179,13 @@ function wade:mount(App, parent): {Instance}
                 if typeof(k) == "number" then
                     local callback = EventCallbacks[k];
                     callback(e, i, v);
+                elseif typeof(k) == "string" then
+                    -- instance[prop] may fail because the property may not exist
+                    pcall(function()
+                        if not safeProps[k] then
+                            i[k] = v;
+                        end
+                    end);
                 end
             end
         end
@@ -232,8 +239,6 @@ function wade:onVisibilityChanged(x, f)
         if typeof(x) ~= "Instance" then
             return;
         end
-
-        print(x);
 
         table.insert(conns, x:GetPropertyChangedSignal("Visible"):Connect(function()
             f(x.Visible);

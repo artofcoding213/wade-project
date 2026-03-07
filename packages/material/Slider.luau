@@ -142,6 +142,22 @@ return function(props: Props)
                             return UDim2.fromScale(-(1-x), 0);
                         end),
                     },
+                    e "TextButton" {
+                        Size = UDim2.fromScale(1, 1),
+                        BackgroundTransparency = 1,
+                        Text = "",
+
+                        [wade.Event.MouseButton1Down] = function()
+                            slide();
+                        end,
+                        [wade.Event.MouseButton1Up] = function()
+                            if conn then
+                                onDisconnect();
+                                conn:Disconnect();
+                                conn = nil;
+                            end
+                        end,
+                    },
                 },
             },
             e "TextButton" {

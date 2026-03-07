@@ -45,6 +45,10 @@ return {
     MouseButton2Down = wrapEvent("MouseButton2Down"),
     MouseButton2Up = wrapEvent("MouseButton2Up"),
 
+    Focused = wrapEvent("Focused"),
+    FocusLost = wrapEvent("FocusLost"),
+    ReturnPressedFromOnScreenKeyboard = wrapEvent("ReturnPressedFromOnScreenKeyboard"),
+
     -- stuff you'll probably use 1/16 of the time:
     MouseMoved = wrapEvent("MouseMoved"),
     MouseWheelForward = wrapEvent("MouseWheelForward"),

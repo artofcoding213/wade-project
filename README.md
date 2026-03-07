@@ -46,7 +46,7 @@ Some notes:
         * Like with `Children` you can pass the `Charm` property inside of an elements properties.\
         The charm will *only* be updated once its children have been mounted
     * Misc:
-        * You can pass `InheritedProps` so the Wade engine will automatically connect events in the table to the instance.
+        * You can pass `InheritedProps` so the Wade engine will automatically connect events in the table to the instance, it also acts as a secondary to normal properties, if they don't exist, the inherited prop will be set on the instance.
         * You can pass `InheritedZIndex` so children inherit the ZIndex property as well as `InheritedZIndex+1`. This is extremely
         helpful for wade/material's Dialog component
 * Applying multiple animation charms to an instance:

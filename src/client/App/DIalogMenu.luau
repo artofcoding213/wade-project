@@ -9,9 +9,19 @@ local Avatar = Material.Avatar;
 local List = Material.List;
 local Label = Material.Label;
 local HoverCard = Material.HoverCard;
+local Input = Material.Input;
 
 return function()
     local open = c(false);
+    local objectCount = c(0);
+
+    task.spawn(function()
+        local pgui = game.Players.LocalPlayer:WaitForChild("PlayerGui");
+        while true do
+            objectCount:set(#pgui:QueryDescendants("GuiObject")); 
+            task.wait(2);
+        end
+    end);
 
     return {
         Button {
@@ -21,7 +31,7 @@ return function()
             Padding = UDim.new(0, 10),
             Style = "Secondary",
 
-            Text = "Dialog Menu",
+            Text = "Dialog Menu + more examples",
             [wade.Event.Activated] = function()
                 open:set(function(x)
                     return not x;
@@ -41,9 +51,18 @@ return function()
                     FillDirection = Enum.FillDirection.Vertical,
                     HorizontalAlignment = Enum.HorizontalAlignment.Left,
                     VerticalAlignment = Enum.VerticalAlignment.Top,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
                     Padding = UDim.new(0, 5),
                 },
+                Label {
+                    LayoutOrder = 0,
+                    Text = wade.charmHook(objectCount, function(x)
+                        return `gui object count: {x}`;
+                    end),
+                    BackgroundTransparency = 0,
+                },
                 List {
+                    LayoutOrder = 1,
                     FillDirection = Enum.FillDirection.Horizontal,
                     Children = {
                         HoverCard {
@@ -87,6 +106,11 @@ return function()
                             Text = "These avatars have hover cards!",
                         },
                     },
+                },
+                Input {
+                    LayoutOrder = 2,
+                    BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
+                    PlaceholderText = "hello, input!",
                 },
             },
         }

@@ -26,6 +26,7 @@ return function()
     local checkboxOn = c(false);
     local sz = c("big");
     local sliderValue = c(0);
+    local loudness = c(0);
 
     checkboxOn:subscribe(function(x)
         music.Looped = x;
@@ -42,7 +43,11 @@ return function()
         end
     end);
 
-    game.RunService.PreRender:Connect(function()
+    game.RunService.PreRender:Connect(function(dt)
+        loudness:set(
+            math.clamp(math.lerp(loudness:get(), music.PlaybackLoudness/1000, dt*10)*sliderValue:get()*1.5, 0, 1)
+        );
+
         if timePositionLocked:get() then
             return;
         end
@@ -143,6 +148,27 @@ return function()
                             onSlideEnd = function()
                                 timePositionLocked:set(false);
                             end,
+                        },
+                    },
+                },
+                List {
+                    Size = UDim2.new(1, 0, 0, 0),
+                    AutomaticSize = Enum.AutomaticSize.Y,
+                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                    Padding = UDim.new(0, 10),
+
+                    Children = {
+                        Label {
+                            LayoutOrder = 2,
+                            BackgroundTransparency = 0,
+                            Text = wade.charmHook(loudness, function(x)
+                                return `Loudness: {math.floor(x*100)}%`;
+                            end),
+                        },
+                        Slider {
+                            LayoutOrder = 1,
+                            Value = loudness,
+                            Size = UDim2.new(0.5, 0, 0, 10),
                         },
                     },
                 },
