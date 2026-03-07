@@ -153,17 +153,12 @@ function wade:mount(App, parent): {Instance}
         safeProps.InheritedProps = nil;
         safeProps.InheritedZIndex = nil;
 
-        for k, v in pairs(safeProps) do
-            if typeof(k) == "number" then
-                local callback = EventCallbacks[k];
-                callback(e, i, v);
-
-                continue;
-            end
-
+        local function attach(k, v)
             if isCharm(v) then
                 v:subscribe(function(x)
-                    i[k] = x;
+                    pcall(function()
+                        i[k] = x
+                    end);
                 end);
 
                 i[k] = v:get();
@@ -172,6 +167,17 @@ function wade:mount(App, parent): {Instance}
             else
                 i[k] = v;
             end
+        end
+
+        for k, v in pairs(safeProps) do
+            if typeof(k) == "number" then
+                local callback = EventCallbacks[k];
+                callback(e, i, v);
+
+                continue;
+            end
+
+            attach(k, v);
         end
 
         if e.props.InheritedProps then
@@ -183,7 +189,7 @@ function wade:mount(App, parent): {Instance}
                     -- instance[prop] may fail because the property may not exist
                     pcall(function()
                         if not safeProps[k] then
-                            i[k] = v;
+                            attach(k, v);
                         end
                     end);
                 end

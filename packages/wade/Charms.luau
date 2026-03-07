@@ -47,11 +47,11 @@ export type AnimCharm<T> = {
 
 local exports = {};
 
-function exports.charm<T>(initValue: T): Charm<T>
+function exports.charm<T>(initValue: T, initSubscription: ((new: T, prev: T?) -> ())?): Charm<T>
     local x = initValue;
     local subscriptions = {};
 
-    return {
+    return ({
         __is_charm = "charm",
 
         set = function(self, y)
@@ -100,7 +100,12 @@ function exports.charm<T>(initValue: T): Charm<T>
                 end,
             };
         end,
-    };
+
+        init = function(self)
+            self:subscribe(initSubscription);
+            return self;
+        end,
+    }):init();
 end
 
 function exports.isCharm(x: any)

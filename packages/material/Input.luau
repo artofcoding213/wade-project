@@ -5,6 +5,7 @@ local c = wade.charm;
 local a = wade.animCharm;
 
 local Material = _G["_Material"]::any;
+local List = Material.List;
 
 type p<T> = (T | wade.Charm<T> | wade.AnimCharm<T>)?;
 export type Props = {[number]: (...any) -> ()} & {[string]: any} & {
@@ -26,6 +27,11 @@ export type Props = {[number]: (...any) -> ()} & {[string]: any} & {
     Font: p<Font>;
     TextSize: p<number>;
 
+    IconSize: p<UDim2>;
+    Icon: p<string>;
+    IconPosition: ("left" | "right")?; -- default: "right"
+
+    Children: wade.ChildrenType;
     Charm: wade.Charm<TextBox>;
 };
 
@@ -67,25 +73,28 @@ return function(props: Props)
         end
     end);
 
-    return e "TextBox" {
-        PlaceholderText = props.PlaceholderText,
-        PlaceholderColor3 = props.PlaceholderColor or props.TextColor or Color3.new(0.8, 0.8, 0.8),
+    return List {
+        FillDirection = Enum.FillDirection.Horizontal,
+        Padding = UDim.new(0, 5),
 
         BackgroundColor3 = hover,
-        BorderSizePixel = 0,
-        TextColor3 = props.TextColor or Color3.new(0.9, 0.9, 0.9),
-        FontFace = props.Font or Material.Font(),
-        TextSize = props.TextSize or 16,
-
+        BackgroundTransparency = 0,
         Size = props.Size or UDim2.fromOffset(100, 0),
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
+        BorderSizePixel = 0,
+
         AnchorPoint = props.AnchorPoint,
         AutomaticSize = props.AutomaticSize or Enum.AutomaticSize.XY,
 
-        Text = text,
-        ClearTextOnFocus = false,
+        [wade.Event.Hover] = function()
+            strokeTransparency:play();
+            hover:play();
+        end,
+        [wade.Event.Unhover] = function()
+            strokeTransparency:playReverse();
+            hover:playReverse();
+        end,
 
-        Charm = charm,
         InheritedProps = props,
         Children = {
             e "UICorner" {
@@ -125,26 +134,51 @@ return function(props: Props)
                 Transparency = 0.5,
                 Color = Material.Lighten(Material.ButtonColor("Secondary"), 0.4),
                 Thickness = 1,
-            }
-        },
+            },
+            e "TextBox" {
+                LayoutOrder = 0,
+                PlaceholderText = props.PlaceholderText,
+                PlaceholderColor3 = props.PlaceholderColor or props.TextColor or Color3.new(0.8, 0.8, 0.8),
 
-        [wade.Event.Hover] = function()
-            strokeTransparency:play();
-            hover:play();
-        end,
-        [wade.Event.Unhover] = function()
-            strokeTransparency:playReverse();
-            hover:playReverse();
-        end,
-        
-        [wade.Event.Focused] = function()
-            focused:set(true);
-        end,
-        [wade.Event.ReturnPressedFromOnScreenKeyboard] = function()
-            focused:set(false);
-        end,
-        [wade.Event.FocusLost] = function()
-            focused:set(false);
-        end,
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                TextColor3 = props.TextColor or Color3.new(0.9, 0.9, 0.9),
+                FontFace = props.Font or Material.Font(),
+                TextSize = props.TextSize or 16,
+
+                Size = UDim2.fromScale(0, 0),
+                AutomaticSize = Enum.AutomaticSize.XY,
+
+                Text = text,
+                ClearTextOnFocus = false,
+
+                Charm = charm,
+                InheritedProps = props,
+                [wade.Event.Focused] = function()
+                    focused:set(true);
+                end,
+                [wade.Event.ReturnPressedFromOnScreenKeyboard] = function()
+                    focused:set(false);
+                end,
+                [wade.Event.FocusLost] = function()
+                    focused:set(false);
+                end,
+            },
+            if props.Icon == nil then {} else e "ImageLabel" {
+                Size = props.IconSize or UDim2.fromOffset(16, 16),
+                LayoutOrder = props.IconPosition == "left" and 0 or 1,
+                BackgroundTransparency = 1,
+
+                Image = props.Icon,
+                Charm = c(nil, function(x)
+                    local i = props.Icon or "";
+                    if Charms.isCharm(i) then i = i:get(); end
+
+                    x.Image = i;
+                end),
+            },
+
+            props.Children,
+        },
     };
 end

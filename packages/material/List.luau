@@ -24,7 +24,7 @@ return function(props: Props)
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
         AutomaticSize = props.AutomaticSize or Enum.AutomaticSize.XY,
         
-        BackgroundTransparency = 1,
+        BackgroundTransparency = props.BackgroundTransparency or 1,
         InheritedProps = props,
         Children = {
             e "UIListLayout" {

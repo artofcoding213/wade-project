@@ -17,7 +17,7 @@ local Sonner = require(script.Parent.Sonner);
 return function()
     local open = c(false);
     local objectCount = c(0);
-    local inputValue = c();
+    local inputValue = c("");
 
     task.spawn(function()
         local pgui = game.Players.LocalPlayer:WaitForChild("PlayerGui");
@@ -124,6 +124,10 @@ return function()
                                 BackgroundColor = Material.Lighten(Material.ButtonColor("Secondary"), -0.2),
                                 PlaceholderText = "hello, input!",
                                 Text = inputValue,
+
+                                Icon = wade.charmHook(inputValue, function(x)
+                                    return x == "" and "rbxassetid://10993876141" or "rbxassetid://127075876244307";
+                                end),
                             },
                             Button {
                                 Style = "Secondary",
