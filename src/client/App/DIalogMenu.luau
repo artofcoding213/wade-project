@@ -29,7 +29,7 @@ return function()
             progressValue:play();
 
             objectCount:set(#pgui:QueryDescendants("GuiObject")); 
-            task.wait(2);
+            task.wait(0.5);
         end
     end);
 

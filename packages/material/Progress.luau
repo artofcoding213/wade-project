@@ -18,6 +18,8 @@ export type Props = {[number]: (...any) -> ()} & {[string]: any} & {
     Size: p<UDim2>;
     Position: p<UDim2>;
 
+    CornerRadius: p<UDim>;
+
     Children: wade.ChildrenType;
 };
 
@@ -40,7 +42,7 @@ return function(props: Props)
         InheritedProps = props,
         Children = {
             e "UICorner" {
-                CornerRadius = UDim.new(1, 0),
+                CornerRadius = props.CornerRadius or UDim.new(1, 0),
             },
             e "Frame" {
                 BackgroundColor3 = fillColor,
