@@ -1,3 +1,24 @@
+-- basic signal implementation
+local Signal = {};
+Signal.__index = Signal;
+
+function Signal.new()
+    local self = setmetatable({}, Signal);
+    self.conns = {};
+
+    return self;
+end
+
+function Signal:connect(f)
+    table.insert(self.conns, f);
+end
+
+function Signal:fire(...)
+    for _, f in ipairs(self.conns) do
+        task.spawn(f, ...);
+    end
+end
+
 --[[
 
 Charms 101
@@ -112,7 +133,28 @@ function exports.isCharm(x: any)
     return typeof(x) == "table" and x.__is_charm == "charm";
 end
 
-function exports.charmHook<T, T2>(closed: Charm<T>, f: (new: T, prev: T?) -> T2): Charm<T2>
+function exports.charmHook<T, T2>(closed: Charm<T> | AnimCharm<T>, f: (new: T, prev: T?) -> T2): Charm<T2>
+    if exports.isAnimCharm(closed) then
+        local a = exports.animCharm(f(closed.a), f(closed.b), closed.ti, closed.startAtB, closed.initStartAtB);
+        closed.onSetAB:connect(function(_a, b)
+            a:setAB(f(_a), f(b));
+        end);
+
+        closed.onPlay:connect(function()
+            a:play();
+        end);
+
+        closed.onPlayReverse:connect(function()
+            a:playReverse();
+        end);
+
+        closed.onStop:connect(function()
+            a:stop();
+        end);
+
+        return a;
+    end
+
     local c = exports.charm(f(closed:get(), nil));
 
     closed:subscribe(function(new, prev)
@@ -131,6 +173,14 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
         __is_charm = "animCharm",
         a = _a,
         b = _b,
+        ti = ti,
+        startAtB = startAtB,
+        initStartAtB = initStartAtB,
+
+        onSetAB = Signal.new(),
+        onPlay = Signal.new(),
+        onPlayReverse = Signal.new(),
+        onStop = Signal.new(),
 
         wait = function(self)
             for _, t in ipairs(tracks) do
@@ -140,6 +190,7 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
 
         play = function(self)
             self:stop();
+            self.onPlay:fire();
 
             for _, att in ipairs(attached) do
                 local i = att[1];
@@ -160,6 +211,8 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
         end,
 
         playReverse = function(self)
+            self.onPlayReverse:fire();
+
             local oldA, oldB = self.a, self.b;
             
             self:setAB(self.b, self.a);
@@ -168,6 +221,8 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
         end,
 
         stop = function(self)
+            self.onStop:fire();
+
             for _, a in ipairs(tracks) do
                 a:Pause();
             end
@@ -176,6 +231,7 @@ function exports.animCharm<T>(_a: T, _b: T, ti: TweenInfo, startAtB: boolean?, i
         end,
 
         setAB = function(self, a, b)
+            self.onSetAB:fire(a, b);
             self.a = a or self.a;
             self.b = b or self.b;
         end,

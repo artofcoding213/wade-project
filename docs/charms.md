@@ -34,6 +34,7 @@ labelText = charmHook(coins, function(x)
 end);
 ```
 Yeah, it's pretty simple. So simple in fact, we can break down its source code!
+> NOTE: The blow source code is outdated. Hooking into animation charms is now possible, and this doesn't cover it.
 ```luau
 function exports.charmHook<T, T2>(closed: Charm<T>, f: (new: T, prev: T?) -> T2): Charm<T2>
     local c = exports.charm(f(closed:get(), nil));

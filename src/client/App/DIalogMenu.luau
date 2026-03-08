@@ -1,6 +1,7 @@
 local wade = require(game.ReplicatedStorage.Packages.wade);
 local c = wade.charm;
 local e = wade.element;
+local a = wade.animCharm;
 
 local Material = require(game.ReplicatedStorage.Packages.material);
 local ScrollArea = Material.ScrollArea;
@@ -11,6 +12,7 @@ local List = Material.List;
 local Label = Material.Label;
 local HoverCard = Material.HoverCard;
 local Input = Material.Input;
+local Progress = Material.Progress;
 
 local Sonner = require(script.Parent.Sonner);
 
@@ -18,10 +20,14 @@ return function()
     local open = c(false);
     local objectCount = c(0);
     local inputValue = c("");
+    local progressValue = a(0, 0, TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out));
 
     task.spawn(function()
         local pgui = game.Players.LocalPlayer:WaitForChild("PlayerGui");
         while true do
+            progressValue:setAB(progressValue.b, math.random());
+            progressValue:play();
+
             objectCount:set(#pgui:QueryDescendants("GuiObject")); 
             task.wait(2);
         end
@@ -161,6 +167,9 @@ return function()
                             Label { Text = "bar" },
                             Label { Text = "baz" },
                         },
+                    },
+                    Progress {
+                        Value = progressValue,
                     },
                 },
             },

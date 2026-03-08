@@ -83,6 +83,7 @@ export type T = typeof(lib) & {
     Select: typeof(require(script.Select)),
     Slider: typeof(require(script.Slider)),
     Sonner: typeof(require(script.Sonner)),
+    Progress: typeof(require(script.Progess)),
 };
 
 local out = setmetatable({}, {

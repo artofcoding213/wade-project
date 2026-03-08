@@ -75,6 +75,7 @@ Instead of calling `Instance.new()` and parenting the frames, this is the cleane
 and is recommended. In fact, `wade/material` uses this technique. If you want to see it in practice, check out `packages/material/Select.luau`
 
 ## The implementation of `wade:mount()`
+> NOTE: The below source code of `wade:mount()` is outdated. See `packages/wade/init.luau` for the current in-production source code
 It's surprisingly simple. Before we dive into the source code, let's knock this helper function out of the way: `parseChildren()`.\
 You'll see it used once or twice, but all it does is condense a children type into a flat array (i.e. `{foo, {bar, baz}}` -> `{foo, bar, baz}`).
 
