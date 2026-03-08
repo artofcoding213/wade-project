@@ -50,7 +50,6 @@ return function(props: Props)
 
                 Size = UDim2.fromScale(1, 1),
                 Position = h(value, function(x)
-                    print(`h: {x}`);
                     return UDim2.fromScale(-(1-x), 0);
                 end),
             },
